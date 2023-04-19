@@ -17,14 +17,14 @@ This capture the steps required to run a local copy of DHIS2.
 - 2023-04-04 - Sujani on Teams: Meeting at 09h00 (Elizaveta is away)
   - Follow up - Who can own this project?
 - 2023-03-30 1-1 w/Elizaveta Oulman (SRHD)
-- 2023-03-23 - docker-compose (spaces) GiHub: DHIS2 (github.com)
+- 2023-03-23 - docker-compose (spaces) GitHub: DHIS2 (github.com)
 - 2023-03-22 - Tim: Can you look at DHIS2
 - 2023-03-16 - Susan - CSAR+ODK meeting - Harms Reduction / Elizaveta Oulman - DMIA Intake Team?
 
 ## Org
 
-- Sujani, Lisa are intake team - DST Team - Data Science Team
-- SRHD - Substance Realated Harms Division
+- Sujani, Lisa, Elizaveta are intake team - DST Team - Data Science Team
+- Diana, Jenny, Amanda SRHD - Substance Realated Harms Division
 
 ## References
 
