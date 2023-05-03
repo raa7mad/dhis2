@@ -41,10 +41,10 @@ pulumi config set gcp:project pdcp-cloud-009-danl
 pulumi up
 ```
 
-#### ssh into the vm
+#### Finalize inside the VM
 
 ```bash
-# All the outputs
+# Show all the outputs
 pulumi stack output
 # get the external ip
 pulumi stack output externalIP
@@ -55,7 +55,7 @@ gcloud compute ssh --zone "$(pulumi stack output instanceZone)" "$(pulumi stack 
 # ssh into the machine
 gcloud compute ssh --zone "$(pulumi stack output instanceZone)" "$(pulumi stack output instanceName)" 
 
-
+# git clone; docker compose...
 ```
 
 #### Cleanup
