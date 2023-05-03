@@ -1,5 +1,6 @@
 import * as pulumi from "@pulumi/pulumi";
 import * as gcp from "@pulumi/gcp";
+// import * as docker from "@pulumi/docker";
 
 // Create the VPC.
 const network = new gcp.compute.Network("network", {
@@ -16,15 +17,15 @@ const subnetwork = new gcp.compute.Subnetwork("subnetwork", {
 });
 
 // Allow SSH access.
-const firewall = new gcp.compute.Firewall("allowssh", {
+const firewall = new gcp.compute.Firewall("allow-ssh-http-https", {
   network: network.selfLink,
   allows: [
     {
       protocol: "tcp",
-      ports: ["22"],
+      ports: ["22", "80", "443"],
     },
   ],
-  targetTags: ["allow-ssh"],
+  targetTags: ["allow-ssh-http-https"],
   sourceRanges: ["0.0.0.0/0"],
 });
 
@@ -51,7 +52,9 @@ ufw allow 22
 // Create the VM Instance.
 const instance = new gcp.compute.Instance("vm-instance", {
   zone: "northamerica-northeast1-a",
-  machineType: "e2-medium",
+  machineType: "e2-medium", //  1-2 vCPU (1 shared core), 4 GB memory
+  //  e2-standard-2 // 2 vCPU, 8 GB memory
+  //  e2-standard-4 // 4 vCPU, 16 GB memory
   bootDisk: {
     initializeParams: {
       image: image.then((image) => image.selfLink),
@@ -69,8 +72,9 @@ const instance = new gcp.compute.Instance("vm-instance", {
     },
   ],
   metadataStartupScript: startupScript,
-  // These are network tags (used in the firewall rule)
-  tags: ["allow-ssh", "allow-http", "allow-https"],
+
+  // This is a network tag (used in the firewall rule)
+  tags: ["allow-ssh-http-https"],
 });
 
 // Export instance name and zone.

@@ -5,10 +5,17 @@ This capture the steps required to run a local copy of DHIS2.
 ## TODO
 
 - [ ] Find an engagement owner - permission to stand up a VM?
-- [ ] Deploy local
-- [ ] Deploy to VM - docker-compose
+- [x] Deploy local
+- [x] Deploy to VM - docker-compose
+  - [x] pulumi - gcp - vm - docker-compose
+  - [x] install docker with init script
+  - [ ] move to pulumi/{quickstart|docker-vm} directory
+  - [ ] move to phac-garden
   - [ ] with caddy for ssl
-- pulumi - gcp - vm - docker-compose
+  - [ ] tune instance type
+    - e2-medium     // 1-2 vCPU (1 shared core), 4 GB memory
+    - e2-standard-2 // 2 vCPU, 8 GB memory
+    - e2-standard-4 // 4 vCPU, 16 GB memory
 
 ## Pulumi
 
@@ -42,9 +49,12 @@ pulumi stack output
 # get the external ip
 pulumi stack output externalIP
 
+# add user to docker group: 'till I figure out how to get the $USER in the init script
+gcloud compute ssh --zone "$(pulumi stack output instanceZone)" "$(pulumi stack output instanceName)" --command 'sudo usermod -aG docker $USER'
+
+# ssh into the machine
 gcloud compute ssh --zone "$(pulumi stack output instanceZone)" "$(pulumi stack output instanceName)" 
-# once in the remote shell
-sudo usermod -aG docker $USER
+
 
 ```
 
