@@ -15,26 +15,62 @@ This capture the steps required to run a local copy of DHIS2.
 Select the backend and setup gcloud auth
 
 ```bash
-pulumi login file:/Users/daniel/Code/PHAC/phac-dhis2/PulumiState
+# Select the state backend (local)
 
+# From repo top level - until we start using a GCP bucket for state
+mkdir PulumiState && pulumi login "file:$PWD/PulumiState"
+pulumi login file:/Users/daniel/Code/PHAC/phac-dhis2/PulumiState
+# required to operate on GCP
 gcloud auth application-default login
 ```
+
+### GCP-VM-Docker - GCP
+
+```bash
+mkdir docker-vm && cd docker-vm
+pulumi new gcp-typescript
+# set the project scope
+pulumi config set gcp:project pdcp-cloud-009-danl
+pulumi up
+```
+
+#### ssh into the vm
+
+```bash
+# All the outputs
+pulumi stack output
+# get the external ip
+pulumi stack output externalIP
+
+gcloud compute ssh --zone "$(pulumi stack output instanceZone)" "$(pulumi stack output instanceName)" 
+# once in the remote shell
+sudo usermod -aG docker $USER
+
+```
+
+#### Cleanup
+
+```bash
+# clean up resources
+pulumi destroy
+# remove 'dev' stack and history
+pulumi stack rm dev
+```
+
+### QuickStart - WebBucket
 
 Start a GCP typescript pulumi project with local state
 
 ```bash
-# mkdir PulumiState && pulumi login  file://./PulumiState
-
 mkdir quickstart && cd quickstart
 pulumi new gcp-typescript
-# change location: "northamerica-northeast1",
+# set the project scope
+pulumi config set gcp:project pdcp-cloud-009-danl
 pulumi up
-```
-
-### [Pulumi AI](https://www.pulumi.com/ai/)
-
-```txt
-On GCP create a ubuntu-2204-lts VM in a new VPC in northamerica-northeast1 and install docker
+# clean up resources
+pulumi destroy
+# remove 'dev' stack and history
+pulumi stack rm dev
 ```
 
 ## Log (external)
@@ -62,4 +98,4 @@ On GCP create a ubuntu-2204-lts VM in a new VPC in northamerica-northeast1 and i
 - [DHIS2 Developer Portal](https://developers.dhis2.org/)
 - [Developer Portal Repo](https://github.com/dhis2/developer-portal)
 - [Code Repo](https://github.com/dhis2/dhis2-core#run-dhis2-in-docker)
-- 
+- [Pulumi AI](https://www.pulumi.com/ai/)
