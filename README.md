@@ -4,11 +4,40 @@ This capture the steps required to run a local copy of DHIS2.
 
 ## TODO
 
-- Find an engagement owner - permission to stand up a VM?
+- [ ] Find an engagement owner - permission to stand up a VM?
 - [ ] Deploy local
-- [ ] Deploy to VM - docker-compose - with caddy for ssl
+- [ ] Deploy to VM - docker-compose
+  - [ ] with caddy for ssl
+- pulumi - gcp - vm - docker-compose
 
-## Log
+## Pulumi
+
+Select the backend and setup gcloud auth
+
+```bash
+pulumi login file:/Users/daniel/Code/PHAC/phac-dhis2/PulumiState
+
+gcloud auth application-default login
+```
+
+Start a GCP typescript pulumi project with local state
+
+```bash
+# mkdir PulumiState && pulumi login  file://./PulumiState
+
+mkdir quickstart && cd quickstart
+pulumi new gcp-typescript
+# change location: "northamerica-northeast1",
+pulumi up
+```
+
+### [Pulumi AI](https://www.pulumi.com/ai/)
+
+```txt
+On GCP create a ubuntu-2204-lts VM in a new VPC in northamerica-northeast1 and install docker
+```
+
+## Log (external)
 
 - 2023-04-19 - DHIS2 demo - with Diana
 - 2023-04-11 - Setting up DHIS2 w/Diana,Jenny, Elizaveta, Sujani
@@ -33,3 +62,4 @@ This capture the steps required to run a local copy of DHIS2.
 - [DHIS2 Developer Portal](https://developers.dhis2.org/)
 - [Developer Portal Repo](https://github.com/dhis2/developer-portal)
 - [Code Repo](https://github.com/dhis2/dhis2-core#run-dhis2-in-docker)
+- 
