@@ -55,6 +55,9 @@ gcloud compute ssh --zone "$(pulumi stack output instanceZone)" "$(pulumi stack 
 # ssh into the machine
 gcloud compute ssh --zone "$(pulumi stack output instanceZone)" "$(pulumi stack output instanceName)" 
 
+# smoke test
+docker run hello-world
+
 # git clone; docker compose...
 # from https://github.com/dhis2/dhis2-core/blob/master/docker-compose.yml
 ```
