@@ -34,6 +34,21 @@ const staticIP = new gcp.compute.Address("static-ip", {
   region: "northamerica-northeast1",
 });
 
+// Assume existing managed zone
+const dlPhacAlphaExistingManagedZone = gcp.dns.ManagedZone.get(
+  "dl-phac-alpha-canada-ca",
+  "5975330339948395253"
+);
+
+// Create a DNS record for the static IP
+const dnsRecord = new gcp.dns.RecordSet("demo-dhis2-dns-record", {
+  name: "demo.dhis2.dl.phac.alpha.canada.ca.",
+  type: "A",
+  ttl: 300,
+  managedZone: dlPhacAlphaExistingManagedZone.name,
+  rrdatas: [staticIP.address],
+});
+
 // Find Ubuntu 22.04 LTS image.
 // gcloud compute images list --filter="family~'ubuntu-2204-lts'"
 const image = gcp.compute.getImage({
@@ -84,3 +99,4 @@ export const instanceName = instance.name;
 export const instanceZone = instance.zone;
 // Export instance external IP.
 export const externalIP = staticIP.address;
+export const dnsRecordName = dnsRecord.name;
