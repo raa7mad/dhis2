@@ -52,9 +52,9 @@ ufw allow 22
 // Create the VM Instance.
 const instance = new gcp.compute.Instance("vm-instance", {
   zone: "northamerica-northeast1-a",
-  machineType: "e2-medium", //  1-2 vCPU (1 shared core), 4 GB memory
-  //  e2-standard-2 // 2 vCPU, 8 GB memory
-  //  e2-standard-4 // 4 vCPU, 16 GB memory
+  // machineType: "e2-medium",     // 1-2 vCPU (1 shared core), 4 GB memory
+  // machineType: "e2-standard-2", // 2 vCPU, 8 GB memory
+  machineType: "e2-standard-4", // 4 vCPU, 16 GB memory
   bootDisk: {
     initializeParams: {
       image: image.then((image) => image.selfLink),

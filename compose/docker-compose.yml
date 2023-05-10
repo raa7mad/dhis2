@@ -1,13 +1,30 @@
 version: "3.8"
 
 services:
+  caddy:
+    image: caddy:2
+    build:
+      context: .
+      dockerfile: Dockerfile-caddy
+    restart: unless-stopped
+    volumes:
+      - ./docker/Caddyfile:/etc/caddy/Caddyfile
+      - caddy-data:/data
+    ports:
+      - "80:80"
+      - "443:443"
+      - "5555:5555"
+      - "8080:8080"
+
   web:
     # dhis2/core:2.39.1.2
+    # image: "dhis2/core:2.38.3.1"
+    # image: "dhis2/core-dev:latest"
     image: "${DHIS2_IMAGE:-dhis2/core:2.39.1.2}"
     # image: "${DHIS2_IMAGE:-dhis2/core-dev:local}"
-    # No need to expose ports, as we are using a reverse proxy
-    ports:
-      - 8080:8080 # DHIS2
+    # No need to expose ports, as we are using a reverse proxy, even for local port 8080
+    # ports:
+    #   - 8080:8080 # DHIS2
     #   - 127.0.0.1:8081:8081 # Debugger: connect using commandline flag -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:8081
     #   - 127.0.0.1:9010:9010 # JMX port (for example for VisualVM)
     volumes:
@@ -58,10 +75,10 @@ services:
     environment:
       # Match the deaful db snapshot to the default DHIS2_IMAGE (2.39.1.2)
       DHIS2_DB_DUMP_URL: "${DHIS2_DB_DUMP_URL:-https://databases.dhis2.org/sierra-leone/2.39/dhis2-db-sierra-leone.sql.gz}"
-      # DHIS2_DB_DUMP_URL: "${DHIS2_DB_DUMP_URL:-https://databases.dhis2.org/sierra-leone/dev/dhis2-db-sierra-leone.sql.gz}"
     working_dir: /opt/dump
     volumes:
       - db-dump:/opt/dump
 
 volumes:
   db-dump:
+  caddy-data:

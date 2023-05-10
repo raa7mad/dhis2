@@ -1,6 +1,6 @@
 # DHIS2 Demo
 
-This capture the steps required to run a local copy of DHIS2.
+This captures the steps required to run a local copy of DHIS2.
 
 ## TODO
 
@@ -9,6 +9,7 @@ This capture the steps required to run a local copy of DHIS2.
 - [x] Deploy to VM - docker-compose
   - [x] pulumi - gcp - vm - docker-compose
   - [x] install docker with init script
+  - [ ] put state into GCP bucket
   - [ ] move to pulumi/{quickstart|docker-vm} directory
   - [ ] move to phac-garden
   - [ ] with caddy for ssl
@@ -16,6 +17,26 @@ This capture the steps required to run a local copy of DHIS2.
     - e2-medium     // 1-2 vCPU (1 shared core), 4 GB memory
     - e2-standard-2 // 2 vCPU, 8 GB memory
     - e2-standard-4 // 4 vCPU, 16 GB memory
+
+## Local docker-compose
+
+```bash
+# use compose files from ./compose 
+# if you are in the VM:
+git clone https://github.com/daneroo/phac-dhis2.git && cd phac-dhis2
+
+cd compose
+# stop the app and delete the db-dump volume
+docker compose down --volumes
+
+# If you want to start DHIS2 with a specific demo DB you can pass a URL like
+# DHIS2_DB_DUMP_URL=https://databases.dhis2.org/sierra-leone/2.39/dhis2-db-sierra-leone.sql.gz 
+# which is the default in our compose file
+docker compose up -d
+docker compose logs -f
+
+open http://localhost:8080
+```
 
 ## Pulumi
 
@@ -31,7 +52,17 @@ pulumi login file:/Users/daniel/Code/PHAC/phac-dhis2/PulumiState
 gcloud auth application-default login
 ```
 
-### GCP-VM-Docker - GCP
+#### Bring up the existing stack
+
+```bash
+# From repo top level
+cd docker-vm
+gcloud auth login
+gcloud auth application-default login
+pulumi up
+```
+
+#### GCP-VM-Docker - GCP - intial setup
 
 ```bash
 mkdir docker-vm && cd docker-vm
@@ -56,7 +87,7 @@ gcloud compute ssh --zone "$(pulumi stack output instanceZone)" "$(pulumi stack 
 gcloud compute ssh --zone "$(pulumi stack output instanceZone)" "$(pulumi stack output instanceName)" 
 
 # smoke test
-docker run hello-world
+docker run --rm hello-world
 
 # git clone; docker compose...
 # from https://github.com/dhis2/dhis2-core/blob/master/docker-compose.yml
@@ -89,6 +120,7 @@ pulumi stack rm dev
 
 ## Log (external)
 
+- 2023-05-08 - DMIA Support for DHIS2 Installation w/Elizaveta
 - 2023-04-19 - DHIS2 demo - with Diana
 - 2023-04-11 - Setting up DHIS2 w/Diana,Jenny, Elizaveta, Sujani
   - They will look at [demo site](https://dhis2.org/demo/)
