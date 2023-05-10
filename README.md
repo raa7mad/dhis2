@@ -4,6 +4,7 @@ This captures the steps required to run a local copy of DHIS2.
 
 ## TODO
 
+- [ ] Clean up these docs!
 - [ ] Find an engagement owner - permission to stand up a VM?
 - [x] Deploy local
 - [x] Deploy to VM - docker-compose
@@ -12,12 +13,9 @@ This captures the steps required to run a local copy of DHIS2.
   - [ ] put state into GCP bucket
   - [ ] move to pulumi/{quickstart|docker-vm} directory
   - [ ] move to phac-garden
-  - [ ] with caddy for ssl
-  - [ ] tune instance type
-    - e2-medium     // 1-2 vCPU (1 shared core), 4 GB memory
-    - e2-standard-2 // 2 vCPU, 8 GB memory
-    - e2-standard-4 // 4 vCPU, 16 GB memory
-
+  - [x] with caddy for ssl
+  - [x] tune instance type - currently e2-standard-4: 4 vCPU, 16 GB memory
+  
 ## Local docker-compose
 
 ```bash
