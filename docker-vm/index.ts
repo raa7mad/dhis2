@@ -22,7 +22,7 @@ const firewall = new gcp.compute.Firewall("allow-ssh-http-https", {
   allows: [
     {
       protocol: "tcp",
-      ports: ["22", "80", "443"],
+      ports: ["22", "80", "443", "8080"],
     },
   ],
   targetTags: ["allow-ssh-http-https"],
@@ -58,6 +58,8 @@ const instance = new gcp.compute.Instance("vm-instance", {
   bootDisk: {
     initializeParams: {
       image: image.then((image) => image.selfLink),
+      size: 100, // 100GB disk
+      type: "pd-ssd",
     },
   },
   networkInterfaces: [
