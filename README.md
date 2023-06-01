@@ -65,7 +65,7 @@ pulumi up
 ```bash
 mkdir docker-vm && cd docker-vm
 pulumi new gcp-typescript
-# set the project scope
+# set the project scope, customizedable
 pulumi config set gcp:project pdcp-cloud-009-danl
 pulumi up
 ```
