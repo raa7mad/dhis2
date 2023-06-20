@@ -10,7 +10,7 @@
 	reverse_proxy web:8080
 }
 
-demo.dhis2.dl.phac.alpha.canada.ca {
+demo.dhis2.jc.phac.alpha.canada.ca {
 	# service available at web:8080 because we are in the same compose file (network)
 	reverse_proxy web:8080
 }
