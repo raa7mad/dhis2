@@ -21,7 +21,7 @@ This captures the steps required to run a local copy of DHIS2.
 ```bash
 # use compose files from ./compose 
 # if you are in the VM:
-git clone https://github.com/daneroo/phac-dhis2.git && cd phac-dhis2
+git clone https://github.com/PHACDataHub/dhis2.git && cd phac-dhis2
 
 cd compose
 # stop the app and delete the db-dump volume
