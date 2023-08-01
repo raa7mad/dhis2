@@ -2,19 +2,24 @@
 
 This captures the steps required to run a local copy of DHIS2.
 
-## TODO
+## empty the database with out deleting it
+```bash
+# If all of your tables are in a single schema, this approach could work (below code assumes that the name of your schema is public)
+DROP SCHEMA public CASCADE;
+CREATE SCHEMA public;
 
-- [ ] Clean up these docs!
-- [ ] Find an engagement owner - permission to stand up a VM?
-- [x] Deploy local
-- [x] Deploy to VM - docker-compose
-  - [x] pulumi - gcp - vm - docker-compose
-  - [x] install docker with init script
-  - [ ] put state into GCP bucket
-  - [ ] move to pulumi/{quickstart|docker-vm} directory
-  - [ ] move to phac-garden
-  - [x] with caddy for ssl
-  - [x] tune instance type - currently e2-standard-4: 4 vCPU, 16 GB memory
+# If you are using PostgreSQL 9.3 or later, you may also need to restore the default grants.
+
+GRANT ALL ON SCHEMA public TO postgres;
+GRANT ALL ON SCHEMA public TO public;
+```
+
+## access postgres in docker container
+
+```bash
+docker exec -it compose-db-1 /bin/bash
+psql -d dhis -U dhis
+```
   
 ## Local docker-compose
 
@@ -115,20 +120,6 @@ pulumi destroy
 # remove 'dev' stack and history
 pulumi stack rm dev
 ```
-
-## Log (external)
-
-- 2023-05-08 - DMIA Support for DHIS2 Installation w/Elizaveta
-- 2023-04-19 - DHIS2 demo - with Diana
-- 2023-04-11 - Setting up DHIS2 w/Diana,Jenny, Elizaveta, Sujani
-  - They will look at [demo site](https://dhis2.org/demo/)
-  - Start GCP account creation? w/John
-- 2023-04-04 - Sujani on Teams: Meeting at 09h00 (Elizaveta is away)
-  - Follow up - Who can own this project?
-- 2023-03-30 1-1 w/Elizaveta Oulman (SRHD)
-- 2023-03-23 - docker-compose (spaces) GitHub: DHIS2 (github.com)
-- 2023-03-22 - Tim: Can you look at DHIS2
-- 2023-03-16 - Susan - CSAR+ODK meeting - Harms Reduction / Elizaveta Oulman - DMIA Intake Team?
 
 ## Org
 
