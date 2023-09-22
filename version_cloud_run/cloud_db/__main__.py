@@ -2,6 +2,7 @@
 
 import pulumi
 from pulumi_gcp import sql, secretmanager, cloudrun, iam
+import pulumi_gcp as gcp
 
 #define variable
 region_local = "northamerica-northeast1"
@@ -43,6 +44,12 @@ database = sql.Database("dhis-db",
     project = project_local,
 )
 
+# create db admin
+user = sql.User("user",
+                name="admin",
+                instance=instance.name,
+                password=password)
+
 
 # cloud run to deploy dhis2 docker image, with connection to cloud database becuase cloud run is stateless
 service = cloudrun.Service('dhis2-service', 
@@ -54,15 +61,19 @@ service = cloudrun.Service('dhis2-service',
                 envs=[
                     cloudrun.ServiceTemplateSpecContainerEnvArgs(
                         name='DATABASE_USER',
-                        value='myuser', # Specify your database username here
+                        value= user.name, # Specify your database username here
                     ),
+                    cloudrun.ServiceTemplateSpecContainerEnvArgs(
+                            name="DB_HOST",
+                            value= instance.connection_name, # Specify database host
+                        ),
                     cloudrun.ServiceTemplateSpecContainerEnvArgs(
                         name='DATABASE_NAME',
                         value= database.name , # Specify your database name here
                     ),
                     cloudrun.ServiceTemplateSpecContainerEnvArgs(
                         name='DATABASE_PASSWORD',
-                        value=password, # Specify your database password here
+                        value= user.password, # Specify your database password here
                     ),
                 ],
             )],
@@ -73,8 +84,19 @@ service = cloudrun.Service('dhis2-service',
     )],
 )
 
+# set allow-unauthenticated user access
+noauth_iam_policy = gcp.organizations.get_iam_policy(bindings=[gcp.organizations.GetIAMPolicyBindingArgs(
+    role="roles/run.invoker",
+    members=["allUsers"],
+)])
+noauth_iam_policy = gcp.cloudrun.IamPolicy("noauthIamPolicy",
+    location=service.location,
+    project=service.project,
+    service=service.name,
+    policy_data=noauth_iam_policy.policy_data)
 
 # Export the Cloud SQL instance connection name and database name
 pulumi.export("database_name", database.name)
 pulumi.export("instance_connection_name", instance.connection_name)
 pulumi.export("service", service.statuses)
+pulumi.export("service_url", service.statuses[0].url)
